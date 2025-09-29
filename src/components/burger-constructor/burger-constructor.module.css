@@ -1,0 +1,27 @@
+.container {
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bottom {
+  margin-top: 40px;
+  display: flex;
+  gap: 40px;
+  justify-content: flex-end;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+}
