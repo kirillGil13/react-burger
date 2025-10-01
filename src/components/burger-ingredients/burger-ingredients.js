@@ -4,6 +4,7 @@ import BurgerIngredientsItem from './burger-ingredients-item/burger-ingredients-
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
 import PropTypes from 'prop-types';
 import BurgerIngredientsTabs from './burger-ingredients-tabs/burger-ingredients-tabs';
+import { IngredientType } from '../../utils/types';
 
 class BurgerIngredients extends React.Component {
   render() {
@@ -34,17 +35,7 @@ class BurgerIngredients extends React.Component {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
-    proteins: PropTypes.number,
-    fat: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    calories: PropTypes.number,
-    price: PropTypes.number,
-    image: PropTypes.string
-  })),
+  data: PropTypes.arrayOf(IngredientType),
 }
 
 export default BurgerIngredients

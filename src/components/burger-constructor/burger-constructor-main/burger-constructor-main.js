@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './burger-constructor-main.module.css';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
+import { IngredientType } from '../../../utils/types';
 
 class BurgerConstructorMain extends React.Component {
   render() {
@@ -24,17 +25,7 @@ class BurgerConstructorMain extends React.Component {
 }
 
 BurgerConstructorMain.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
-    proteins: PropTypes.number,
-    fat: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    calories: PropTypes.number,
-    price: PropTypes.number,
-    image: PropTypes.string
-  })),
+  data: PropTypes.arrayOf(IngredientType),
 }
 
 export default BurgerConstructorMain
