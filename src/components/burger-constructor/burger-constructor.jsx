@@ -9,6 +9,7 @@ import { DragTypes } from '../../utils/dragTypes'
 import { addConstructorIngredient, deleteConstructorIngredient, moveConstructorIngredient, replaceConstructorIngredient } from '../../services/constructorIngredients';
 import BurgerConstructorMain from './burger-constructor-main/burger-constructor-main';
 import { createOrder } from '../../utils/createOrder';
+import Loader from '../loader/loader';
 
 const createEmptyItem = () => {
   return {
@@ -29,6 +30,7 @@ const BurgerConstructor = () => {
   const [opened, setOpened] = useState(false)
 
   const constructorIngredients = useSelector((store) => store.constructorIngredients.list);
+  const isCreatingOrder = useSelector((store) => store.createdOrder.isLoading);
 
   const dispatch = useDispatch()
   
@@ -128,7 +130,15 @@ const BurgerConstructor = () => {
           <CurrencyIcon className={styles.icon} type="primary" />
         </div>
 
-        <Button size='large' type='primary' htmlType='button' onClick={onCreateOrder}>Оформить заказ</Button>
+        <Button 
+          disabled={!bun._id || isCreatingOrder} 
+          size='large' 
+          type='primary' 
+          htmlType='button' 
+          onClick={onCreateOrder}
+        >
+          { isCreatingOrder ? <Loader /> : 'Оформить заказ'}
+        </Button>
       </div>
 
       {modal}

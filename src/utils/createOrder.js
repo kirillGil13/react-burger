@@ -1,5 +1,7 @@
+import { deleteAllConstructorIngredients } from '../services/constructorIngredients';
 import { setCreatedOrder, setCreatedOrderError, setCreatedOrderLoading } from '../services/createdOrder';
 import { API_URL } from './constants';
+import { request } from './request';
 
 export const createOrder = (ingredients) => {
   return async (dispatch) => {
@@ -7,7 +9,7 @@ export const createOrder = (ingredients) => {
     dispatch(setCreatedOrderError(null));
 
     try {
-      const response = await fetch(API_URL + '/orders', {
+      const result = await request('/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -15,13 +17,8 @@ export const createOrder = (ingredients) => {
         body: JSON.stringify({ingredients})
       });
 
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-
-      const result = await response.json();
-
       dispatch(setCreatedOrder(result.order));
+      dispatch(deleteAllConstructorIngredients())
 
       return result
     } catch (err) {

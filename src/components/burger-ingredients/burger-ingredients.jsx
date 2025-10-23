@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './burger-ingredients.module.css';
 import BurgerIngredientsItem from './burger-ingredients-item/burger-ingredients-item';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
@@ -7,6 +7,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteCurrentIngredient, setCurrentIngredient } from '../../services/currentIngredient';
+import { useInView } from 'react-intersection-observer';
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch()
@@ -26,9 +27,21 @@ const BurgerIngredients = () => {
     return acc
   }, {}), [constructorIngredients])
 
-  const onTabClick = useCallback((tab) => {
-    setCurrentTab(tab)    
+  const { ref: bunRef, inView: bunInView } = useInView({ threshold: 0 })
+  const { ref: sauceRef, inView: sauceInView } = useInView({ threshold: 0 })
+  const { ref: mainRef, inView: mainInView } = useInView({ threshold: 0 })
 
+  useEffect(() => {
+    if (bunInView) {
+      setCurrentTab('bun')
+    } else if (sauceInView) {
+      setCurrentTab('sauce')
+    } else if (mainInView) {
+      setCurrentTab('main')
+    }
+  }, [bunInView, sauceInView, mainInView])
+
+  const onTabClick = useCallback((tab) => {
     const element = document.getElementById(tab)    
     if (element) element.scrollIntoView({behavior: 'smooth'})
   }, [])
@@ -54,15 +67,15 @@ const BurgerIngredients = () => {
       <BurgerIngredientsTabs currentTab={currentTab} onTabClick={onTabClick} />
 
       <div className={styles.content}>
-        <BurgerIngredientsSection id='bun' title='Булки'>
+        <BurgerIngredientsSection id='bun' title='Булки' ref={bunRef}>
           {bunData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
 
-        <BurgerIngredientsSection id='sauce' title='Соусы'>
+        <BurgerIngredientsSection id='sauce' title='Соусы' ref={sauceRef}>
           {sauceData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
 
-        <BurgerIngredientsSection id='main' title='Начинки'>
+        <BurgerIngredientsSection id='main' title='Начинки' ref={mainRef}>
           {mainData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
       </div>

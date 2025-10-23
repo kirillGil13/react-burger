@@ -1,5 +1,6 @@
 import { setIngredientsLoading, setIngredientsError, setIngredientList } from '../services/ingredientList';
 import { API_URL } from './constants';
+import { request } from './request';
 
 export const loadIngredientsList = (init) => {
   return async (dispatch) => {  
@@ -7,12 +8,7 @@ export const loadIngredientsList = (init) => {
     dispatch(setIngredientsError(null));
   
     try {
-      const response = await fetch(API_URL + '/ingredients', init);
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-  
-      const result = await response.json();
+      const result = await request('/ingredients', init)
   
       dispatch(setIngredientList(result.data));
     } catch (err) {

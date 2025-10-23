@@ -9,14 +9,27 @@ const constructorIngredientsSlice = createSlice({
   name: 'constructorIngredients',
   initialState,
   reducers: {
-    setConstructorIngredients: (state, action) => {
-      state.list = action.payload.map((item) => ({...item, uuid: uuidv4()}))
+    setConstructorIngredients: {
+      reducer: (state, action) => {
+        state.list = action.payload
+      },
+      prepare: (ingredients) => { 
+        return {
+          payload: ingredients.map((item) => ({...item, uuid: uuidv4()}))
+        }
+      }
     },
-    addConstructorIngredient: (state, action) => {
-      state.list = [...state.list, {...action.payload, uuid: uuidv4()}]
+    addConstructorIngredient: {
+      reducer: (state, action) => {
+        state.list = [...state.list, action.payload]
+      },
+      prepare: (ingredient) => ({ payload: {...ingredient, uuid: uuidv4()} })
     },
     deleteConstructorIngredient: (state, action) => {
       state.list = state.list.filter((item) => item.uuid !== action.payload)
+    },
+    deleteAllConstructorIngredients: (state) => {
+      state.list = []
     },
     replaceConstructorIngredient: (state, action) => {
       const itemToReplaceIndex = state.list.findIndex((item) => item.uuid === action.payload.from.uuid)
@@ -45,5 +58,6 @@ export const {
   deleteConstructorIngredient, 
   moveConstructorIngredient,
   replaceConstructorIngredient, 
+  deleteAllConstructorIngredients,
 } = constructorIngredientsSlice.actions;
 export default constructorIngredientsSlice.reducer;
