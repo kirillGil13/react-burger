@@ -1,0 +1,11 @@
+.item {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.drag {
+  cursor: grab;
+}

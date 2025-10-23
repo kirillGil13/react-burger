@@ -7,12 +7,5 @@
   overflow-y: auto;
   flex: 1;
   min-height: 0;
-}
-
-.content li {
-  list-style-type: none;
-}
-
-.content li {
-  list-style-type: none;
+  width: 100%;
 }

@@ -1,19 +1,35 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styles from './burger-ingredients.module.css';
 import BurgerIngredientsItem from './burger-ingredients-item/burger-ingredients-item';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
-import PropTypes from 'prop-types';
 import BurgerIngredientsTabs from './burger-ingredients-tabs/burger-ingredients-tabs';
-import { IngredientType } from '../../utils/types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
+import { useSelector } from 'react-redux';
 
-const BurgerIngredients = ({data}) => {
-  const mainData = data.filter((item) => item.type === 'main');
-  const sauceData = data.filter((item) => item.type === 'sauce');
-  const bunData = data.filter((item) => item.type === 'bun');
+const BurgerIngredients = () => {
+  const [currentTab, setCurrentTab] = useState('bun')
   const [opened, setOpened] = useState(false)
   const [pickedItem, setPickedItem] = useState(null)
+
+  const data = useSelector((store) => store.ingredientList.list);
+  const constructorIngredients = useSelector((store) => store.constructorIngredients.list);
+
+  const mainData = useMemo(() => data.filter((item) => item.type === 'main'), [data]);
+  const sauceData = useMemo(() => data.filter((item) => item.type === 'sauce'), [data]);
+  const bunData = useMemo(() => data.filter((item) => item.type === 'bun'), [data]);
+
+  const countMap = useMemo(() => constructorIngredients.reduce((acc, item) => {
+    acc[item._id] = (acc[item._id] || 0) + 1
+    return acc
+  }, {}), [constructorIngredients])
+
+  const onTabClick = useCallback((tab) => {
+    setCurrentTab(tab)    
+
+    const element = document.getElementById(tab)    
+    if (element) element.scrollIntoView({behavior: 'smooth'})
+  }, [])
 
   const closeModal = useCallback(() => {
     setOpened(false)
@@ -33,29 +49,25 @@ const BurgerIngredients = ({data}) => {
 
   return (
     <section className={styles.container}>
-      <BurgerIngredientsTabs />
+      <BurgerIngredientsTabs currentTab={currentTab} onTabClick={onTabClick} />
 
-      <div className={styles.content} onClick={() => setOpened(true)}>
-        <BurgerIngredientsSection title='Булки'>
-          {bunData.map((item) => <BurgerIngredientsItem key={item._id} item={item} onPickIngredient={pickIngredient} />)}
+      <div className={styles.content}>
+        <BurgerIngredientsSection id='bun' title='Булки'>
+          {bunData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
 
-        <BurgerIngredientsSection title='Соусы'>
-          {sauceData.map((item) => <BurgerIngredientsItem key={item._id} item={item} onPickIngredient={pickIngredient} />)}
+        <BurgerIngredientsSection id='sauce' title='Соусы'>
+          {sauceData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
 
-        <BurgerIngredientsSection title='Начинки'>
-          {mainData.map((item) => <BurgerIngredientsItem key={item._id} item={item} onPickIngredient={pickIngredient} />)}
+        <BurgerIngredientsSection id='main' title='Начинки'>
+          {mainData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
       </div>
 
       {modal}
     </section>
   )
-}
-
-BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(IngredientType),
 }
 
 export default BurgerIngredients
