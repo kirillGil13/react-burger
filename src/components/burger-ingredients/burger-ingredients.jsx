@@ -5,13 +5,15 @@ import BurgerIngredientsSection from './burger-ingredients-section/burger-ingred
 import BurgerIngredientsTabs from './burger-ingredients-tabs/burger-ingredients-tabs';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteCurrentIngredient, setCurrentIngredient } from '../../services/currentIngredient';
 
 const BurgerIngredients = () => {
+  const dispatch = useDispatch()
   const [currentTab, setCurrentTab] = useState('bun')
   const [opened, setOpened] = useState(false)
-  const [pickedItem, setPickedItem] = useState(null)
-
+  
+  const currentIngredient = useSelector((store) => store.currentIngredient.item);
   const data = useSelector((store) => store.ingredientList.list);
   const constructorIngredients = useSelector((store) => store.constructorIngredients.list);
 
@@ -33,17 +35,17 @@ const BurgerIngredients = () => {
 
   const closeModal = useCallback(() => {
     setOpened(false)
-    setPickedItem(null)
-  }, [])
+    dispatch(deleteCurrentIngredient())
+  }, [dispatch])
 
   const pickIngredient = useCallback((item) => {
-    setPickedItem(item)
+    dispatch(setCurrentIngredient(item))
     setOpened(true)
-  }, [])
+  }, [dispatch])
 
   const modal = (
     <Modal title='Детали ингредиента' opened={opened} onClose={closeModal}>
-      <IngredientDetails item={pickedItem} />
+      <IngredientDetails item={currentIngredient} />
     </Modal>
   )
 
