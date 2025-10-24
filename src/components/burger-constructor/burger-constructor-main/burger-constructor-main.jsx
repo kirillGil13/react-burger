@@ -1,28 +1,29 @@
 import styles from './burger-constructor-main.module.css';
-import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { IngredientType } from '../../../utils/types';
+import { ConstructorIngredientType } from '../../../utils/types';
+import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 
-const BurgerConstructorMain = ({ingredients}) => {
+const BurgerConstructorMain = ({ingredients, onDeleteItem, onMoveItem}) => {
   return (
     <ul className={styles.content}>
         {
-          ingredients.map((item) => (
-            <li key={item._id}>
-              <ConstructorElement
-                text={item.name}
-                price={item.price}
-                thumbnail={item.image}
-              />
-            </li>
-          ))
+          ingredients.map((item) => 
+            <BurgerConstructorItem 
+              key={item.uuid} 
+              item={item} 
+              moveItem={onMoveItem}
+              handleClose={() => onDeleteItem(item.uuid)} 
+            />
+          )
         }
     </ul>
   )
 }
 
 BurgerConstructorMain.propTypes = {
-  data: PropTypes.arrayOf(IngredientType),
+  ingredients: PropTypes.arrayOf(ConstructorIngredientType.isRequired).isRequired,
+  onDeleteItem: PropTypes.func.isRequired,
+  onMoveItem: PropTypes.func.isRequired,
 }
 
 export default BurgerConstructorMain
