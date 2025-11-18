@@ -1,6 +1,10 @@
+import styles from './not-found.module.css'
+
 const NotFound = () => {
   return (
-    <h1>NotFound</h1>
+    <p className={`${styles.container} text text_type_main-large`}>
+      NotFound
+    </p>
   )
 }
 

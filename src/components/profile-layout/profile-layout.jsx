@@ -1,11 +1,19 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import ProfileLayoutMenuItem from './profile-layout-menu-item/profile-layout-menu-item';
 import styles from './profile-layout.module.css'
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deleteUser } from '../../services/user';
 
 const ProfileLayout = () => {
   const route = useLocation();
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const signOut = () => {
+    localStorage.removeItem('refreshToken');
+    dispatch(deleteUser());
+    navigate('/auth');
+  }
 
   return (
     <section className={styles.container}>
@@ -14,7 +22,7 @@ const ProfileLayout = () => {
           <ul className={styles.menu}>
             <ProfileLayoutMenuItem active={route.pathname === '/profile/info'} text="Профиль" onClick={() => navigate('/profile/info')} />
             <ProfileLayoutMenuItem active={route.pathname === '/profile/orders'} text="История заказов" onClick={() => navigate('/profile/orders')} />
-            <ProfileLayoutMenuItem text="Выход" />
+            <ProfileLayoutMenuItem text="Выход" onClick={signOut} />
           </ul>
           <p className="text text_type_main-default text_color_inactive mt-20">В этом разделе вы можете изменить свои персональные данные</p>
         </nav>

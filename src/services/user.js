@@ -26,9 +26,14 @@ const userSlice = createSlice({
     },
     setAccessToken: (state, action) => {
       state.accessToken = action.payload
+    },
+    deleteUser: (state) => {
+      state.user = null
+      state.initialUser = null
+      state.accessToken = null
     }
   }
 })
 
-export const { setUser, setUserLoading, setUserError, setAccessToken, setInitialUser } = userSlice.actions
+export const { setUser, setUserLoading, setUserError, setAccessToken, setInitialUser, deleteUser } = userSlice.actions
 export default userSlice.reducer
