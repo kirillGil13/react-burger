@@ -1,44 +1,52 @@
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import { useEffect } from 'react';
-import { loadIngredientsList } from '../../utils/loadIngredientsList';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { CurrentIngredient, CurrentOrder, ForgotPassword, Home, Login, NotFound, Orders, Profile, Register, ResetPassword } from '../../pages';
+import AuthLayout from '../auth-layout/auth-layout';
+import ProfileLayout from '../profile-layout/profile-layout';
+import ProtectedRouteElement from '../common/protected-route-element/protected-route-element';
 import { useDispatch } from 'react-redux';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { fetchUser } from '../../utils/auth';
+import { useEffect } from 'react';
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const controller = new AbortController();
-
-    dispatch(loadIngredientsList({signal: controller.signal}))
+    
+    dispatch(fetchUser({signal: controller.signal}))
 
     return () => {
       controller.abort();
     };
-  }, [dispatch]);
+  }, [dispatch])
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className={styles.app}>
-        <AppHeader />
-        
-          <main className={styles.main}>
-            <section className='mt-10'>
-              <h2 className='mb-5 text text_type_main-large'>Соберите бургер</h2>
+    <div className={styles.app}>
+      <AppHeader />
 
-              <BurgerIngredients />
-            </section>
-
-            <section className='mt-25'>
-              <BurgerConstructor />
-            </section>
-          </main>
-      </div>
-    </DndProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<AuthLayout />} >
+            <Route index element={<Navigate to="/auth/login" replace />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+          </Route>
+          <Route path="/profile" element={<ProtectedRouteElement element={<ProfileLayout />} />} >
+            <Route index element={<Navigate to="/profile/info" replace />} />
+            <Route path="info" element={<Profile />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<CurrentOrder />} />
+          </Route>
+          <Route path="/ingredients/:id" element={<CurrentIngredient />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

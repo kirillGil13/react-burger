@@ -1,5 +1,4 @@
 import { setIngredientsLoading, setIngredientsError, setIngredientList } from '../services/ingredientList';
-import { API_URL } from './constants';
 import { request } from './request';
 
 export const loadIngredientsList = (init) => {
