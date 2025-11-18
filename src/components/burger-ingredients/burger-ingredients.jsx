@@ -3,18 +3,16 @@ import styles from './burger-ingredients.module.css';
 import BurgerIngredientsItem from './burger-ingredients-item/burger-ingredients-item';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
 import BurgerIngredientsTabs from './burger-ingredients-tabs/burger-ingredients-tabs';
-import Modal from '../modal/modal';
-import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCurrentIngredient, setCurrentIngredient } from '../../services/currentIngredient';
+import { setCurrentIngredient } from '../../services/currentIngredient';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState('bun')
-  const [opened, setOpened] = useState(false)
   
-  const currentIngredient = useSelector((store) => store.currentIngredient.item);
   const data = useSelector((store) => store.ingredientList.list);
   const constructorIngredients = useSelector((store) => store.constructorIngredients.list);
 
@@ -46,21 +44,10 @@ const BurgerIngredients = () => {
     if (element) element.scrollIntoView({behavior: 'smooth'})
   }, [])
 
-  const closeModal = useCallback(() => {
-    setOpened(false)
-    dispatch(deleteCurrentIngredient())
-  }, [dispatch])
-
   const pickIngredient = useCallback((item) => {
-    dispatch(setCurrentIngredient(item))
-    setOpened(true)
-  }, [dispatch])
-
-  const modal = (
-    <Modal title='Детали ингредиента' opened={opened} onClose={closeModal}>
-      <IngredientDetails item={currentIngredient} />
-    </Modal>
-  )
+    dispatch(setCurrentIngredient(item))    
+    navigate(`/ingredients/${item._id}`, { state: { modal: true } })
+  }, [navigate, dispatch])
 
   return (
     <section className={styles.container}>
@@ -79,8 +66,6 @@ const BurgerIngredients = () => {
           {mainData.map((item) => <BurgerIngredientsItem key={item._id} item={item} count={countMap[item._id]} onPickIngredient={pickIngredient} />)}
         </BurgerIngredientsSection>
       </div>
-
-      {modal}
     </section>
   )
 }

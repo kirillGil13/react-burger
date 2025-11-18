@@ -1,11 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import styles from './auth-layout.module.css'
-import { useSelector } from 'react-redux';
+import { hasAuth } from '../../utils/auth';
 
 const AuthLayout = () => {
-  const refreshToken = localStorage.getItem('refreshToken');
-
-  if (refreshToken) {
+  if (hasAuth()) {
     return (
       <Navigate to="/" replace />
     );

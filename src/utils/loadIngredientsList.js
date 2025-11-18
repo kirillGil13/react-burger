@@ -1,7 +1,7 @@
 import { setIngredientsLoading, setIngredientsError, setIngredientList } from '../services/ingredientList';
 import { request } from './request';
 
-export const loadIngredientsList = (init) => {
+export const loadIngredientsList = (init, currentIngredientId) => {
   return async (dispatch) => {  
     dispatch(setIngredientsLoading(true))
     dispatch(setIngredientsError(null));

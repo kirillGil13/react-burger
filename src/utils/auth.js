@@ -1,6 +1,10 @@
 import { setAccessToken, setInitialUser, setUser, setUserError, setUserLoading } from '../services/user';
 import { get, patch, post } from './request';
 
+export const hasAuth = () => {
+  return !!localStorage.getItem('refreshToken')
+}
+
 const updateToken = (dispatch, authData) => {
   const accessToken = authData.accessToken.split('Bearer ')[1];
 

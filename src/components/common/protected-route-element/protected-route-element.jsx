@@ -1,11 +1,11 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import { hasAuth } from '../../../utils/auth';
 
 const ProtectedRouteElement = ({ element }) => {
   const location = useLocation();
-  const refreshToken = localStorage.getItem('refreshToken');  
 
-  return refreshToken ? element : <Navigate to="/auth/login" state={{ from: location }} replace/>;
+  return hasAuth() ? element : <Navigate to="/auth/login" state={{ from: location }} replace/>;
 }
 
 ProtectedRouteElement.propTypes = {
