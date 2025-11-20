@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import styles from './profile.module.css'
-import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../services/user';
 import { editUser } from '../../utils/auth';
@@ -33,7 +33,7 @@ const Profile = () => {
   const isSubmitButtonDisabled = useMemo(() => {    
     return JSON.stringify(user) === JSON.stringify(initialUser) || isSubmitting;
     },
-    [user, isSubmitting]
+    [user, isSubmitting, initialUser]
   );
 
   const onSubmit = async e => {

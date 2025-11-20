@@ -21,22 +21,24 @@ export const request = async (url, options) => {
 export const post = async (url, data, options = {}) => {
   return request(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify(data),
-    ...options
+    ...options,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      ...options.headers,
+    },
   })
 }
 
 export const patch = async (url, data, options = {}) => {
   return request(url, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify(data),
-    ...options
+    ...options,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      ...options.headers,
+    },
   })
 }
 

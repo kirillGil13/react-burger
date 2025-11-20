@@ -5,9 +5,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { signIn } from '../../utils/auth';
 import { useDispatch } from 'react-redux';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 
 const Login = () => {
-  const [form, setForm] = useState({
+  const {values, handleChange} = useForm({
     email: '',
     password: ''
   });
@@ -21,17 +22,10 @@ const Login = () => {
   const from = location.state?.from?.pathname || '/';
 
   const isSubmitButtonDisabled = useMemo(() => {
-    return !form.password || !form.email || isSubmitting;
+    return !values.password || !values.email || isSubmitting;
     },
-    [form, isSubmitting]
+    [values, isSubmitting]
   );
-
-  const onChangeFormValues = e => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  }
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -40,7 +34,7 @@ const Login = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await dispatch(signIn(form));
+      const result = await dispatch(signIn(values));
 
       if (result.success) {
         navigate(from, {replace: true})
@@ -58,16 +52,16 @@ const Login = () => {
         <h2 className='text text_type_main-medium'>Вход</h2>
 
         <EmailInput
-          onChange={onChangeFormValues}
-          value={form.email}
+          onChange={handleChange}
+          value={values.email}
           name={'email'}
           placeholder="E-mail"
           isIcon={false}
         />
 
         <PasswordInput
-          value={form.password}
-          onChange={onChangeFormValues}
+          value={values.password}
+          onChange={handleChange}
           name={'password'}
           placeholder="Пароль"
         />
@@ -91,7 +85,7 @@ const Login = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/register')
+              navigate('/register')
             }}
             extraClass={styles['link-button']}
           >Зарегистрироваться</Button>
@@ -105,7 +99,7 @@ const Login = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/forgot-password')
+              navigate('/forgot-password')
             }}
             extraClass={styles['link-button']}
           >Восстановить пароль</Button>

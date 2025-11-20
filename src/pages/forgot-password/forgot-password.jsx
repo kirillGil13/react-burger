@@ -1,21 +1,20 @@
-import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './forgot-password.module.css';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { sendPasswordReset } from '../../utils/auth';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+  const {values, handleChange} = useForm({
+    email: '',
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const onChangeEmail = e => {
-    setEmail(e.target.value)
-  }
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -24,10 +23,10 @@ const ForgotPassword = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await sendPasswordReset(email);
+      const result = await sendPasswordReset(values.email);
 
       if (result.success) {
-        navigate('/auth/reset-password', { state: { from: location } })
+        navigate('/reset-password', { state: { from: location } })
       }
     } catch (err) {
       setError(err.message);
@@ -42,8 +41,8 @@ const ForgotPassword = () => {
         <h2 className='text text_type_main-medium'>Восстановление пароля</h2>
 
         <EmailInput
-          onChange={onChangeEmail}
-          value={email}
+          onChange={handleChange}
+          value={values.email}
           name={'email'}
           placeholder="Укажите e-mail"
           isIcon={false}
@@ -53,7 +52,7 @@ const ForgotPassword = () => {
           htmlType="submit"
           type="primary"
           size="medium"
-          disabled={email === '' || isSubmitting}
+          disabled={values.email === '' || isSubmitting}
         >Восстановить</Button>
 
         {error && <ErrorItem error={error} />}
@@ -68,7 +67,7 @@ const ForgotPassword = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/register')
+              navigate('/register')
             }}
             extraClass={styles['link-button']}
           >Зарегистрироваться</Button>
@@ -82,7 +81,7 @@ const ForgotPassword = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/login')
+              navigate('/login')
             }}
             extraClass={styles['link-button']}
           >Войти</Button>

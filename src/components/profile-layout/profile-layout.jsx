@@ -12,7 +12,7 @@ const ProfileLayout = () => {
   const signOut = () => {
     localStorage.removeItem('refreshToken');
     dispatch(deleteUser());
-    navigate('/auth');
+    navigate('/login');
   }
 
   return (

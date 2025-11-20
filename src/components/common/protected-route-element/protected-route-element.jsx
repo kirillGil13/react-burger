@@ -5,7 +5,7 @@ import { hasAuth } from '../../../utils/auth';
 const ProtectedRouteElement = ({ element }) => {
   const location = useLocation();
 
-  return hasAuth() ? element : <Navigate to="/auth/login" state={{ from: location }} replace/>;
+  return hasAuth() ? element : <Navigate to="/login" state={{ from: location }} replace/>;
 }
 
 ProtectedRouteElement.propTypes = {

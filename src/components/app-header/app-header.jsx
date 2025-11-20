@@ -1,12 +1,9 @@
 import styles from './app-header.module.css';
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import AppHeaderNavigationItem from './app-header-navigation-item/app-header-navigation-item';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const AppHeader = () => {
   const className = [styles.container, 'p-4'].join(' ');
-  const location = useLocation();
-  const navigate = useNavigate();
 
   return (
     <header className={className}>
@@ -15,16 +12,14 @@ const AppHeader = () => {
           <AppHeaderNavigationItem 
             className='mr-2' 
             text="Конструктор" 
-            active={location.pathname === '/'} 
+            to='/'
             IconComponent={BurgerIcon}
-            onClick={() => navigate('/')}
            />
 
           <AppHeaderNavigationItem 
-            active={location.pathname === '/foo'} 
+            to='/foo'
             text="Лента заказов" 
             IconComponent={ListIcon}
-            onClick={() => navigate('/foo')}
           />
         </nav>
 
@@ -32,10 +27,9 @@ const AppHeader = () => {
 
         <AppHeaderNavigationItem 
           text="Личный кабинет"
-          active={location.pathname.includes('/profile')} 
+          to='/profile'
           className={styles.account} 
           IconComponent={ProfileIcon} 
-          onClick={() => navigate('/profile')}
          />
       </div>
     </header>

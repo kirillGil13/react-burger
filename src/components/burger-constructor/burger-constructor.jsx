@@ -86,13 +86,13 @@ const BurgerConstructor = () => {
 
   const onCreateOrder = useCallback(async () => {
     if (!hasAuth()) {
-      navigate('/auth')
+      navigate('/login')
       return
     }
     await dispatch(createOrder(constructorIngredients.map((item) => item._id)))
 
     setOpened(true)
-  }, [constructorIngredients, dispatch])
+  }, [constructorIngredients, dispatch, navigate])
 
   const modal = (
     <Modal opened={opened} onClose={closeModal}>

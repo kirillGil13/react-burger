@@ -1,13 +1,8 @@
 .element {
   display: flex;
   align-items: center;
-  color: #8585AD;
   cursor: pointer;
   user-select: none;
   width: max-content;
-}
-
-.element_active {
-  color: #F2F2F3;
-  cursor: pointer;
+  text-decoration: none !important;
 }

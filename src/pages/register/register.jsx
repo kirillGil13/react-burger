@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../utils/auth';
 import { useDispatch } from 'react-redux';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 
 const Register = () => {
-  const [form, setForm] = useState({
+  const {values, handleChange} = useForm({
     name: '',
     email: '',
     password: ''
@@ -19,17 +20,10 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const onChangeFormValue = e => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  }
-
   const isSubmitBtnDisabled = useMemo(() => {
-    return !form.name || !form.email || !form.password || isSubmitting;
+    return !values.name || !values.email || !values.password || isSubmitting;
     },
-    [form, isSubmitting]
+    [values, isSubmitting]
   );
 
   const onSubmit = async e => {
@@ -40,7 +34,7 @@ const Register = () => {
     setIsSubmitting(true);
 
     try {
-      await dispatch(registerUser(form))
+      await dispatch(registerUser(values))
       navigate('/', { replace: true });
     } catch (err) {
       setError(err.message);
@@ -55,23 +49,23 @@ const Register = () => {
         <h2 className='text text_type_main-medium'>Регистрация</h2>
 
         <Input
-          onChange={onChangeFormValue}
-          value={form.name}
+          onChange={handleChange}
+          value={values.name}
           name={'name'}
           placeholder="Имя"
         />
 
         <EmailInput
-          onChange={onChangeFormValue}
-          value={form.email}
+          onChange={handleChange}
+          value={values.email}
           name={'email'}
           placeholder="E-mail"
           isIcon={false}
         />
 
         <PasswordInput
-          value={form.password}
-          onChange={onChangeFormValue}
+          value={values.password}
+          onChange={handleChange}
           name={'password'}
           placeholder="Пароль"
         />
@@ -95,7 +89,7 @@ const Register = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/login')
+              navigate('/login')
             }}
             extraClass={styles['link-button']}
           >Войти</Button>

@@ -4,9 +4,10 @@ import { useMemo, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { resetPassword } from '../../utils/auth';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 
 const ResetPassword = () => {
-  const [form, setFormValues] = useState({
+  const {values, handleChange} = useForm({
     password: '',
     token: '',
   })
@@ -18,17 +19,10 @@ const ResetPassword = () => {
 
   const from = location.state?.from?.pathname;
 
-  const onChangeValue = e => {
-    setFormValues({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  }
-
   const isSubmitButtonDisabled = useMemo(() => {
-    return !form.password || !form.token || isSubmitting;
+    return !values.password || !values.token || isSubmitting;
     },
-    [form, isSubmitting]
+    [values, isSubmitting]
   );
 
   const onSubmit = async e => {
@@ -38,10 +32,10 @@ const ResetPassword = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await resetPassword(form.password, form.token);
+      const result = await resetPassword(values.password, values.token);
 
       if (result.success) {
-        navigate('/auth/login')
+        navigate('/login')
       }
     } catch (err) {
       setError(err.message);
@@ -50,8 +44,8 @@ const ResetPassword = () => {
     }
   }
 
-  if (from !== '/auth/forgot-password') {
-    return <Navigate to="/auth/forgot-password" replace />
+  if (from !== '/forgot-password') {
+    return <Navigate to="/forgot-password" replace />
   }
 
   return (
@@ -60,19 +54,17 @@ const ResetPassword = () => {
         <h2 className='text text_type_main-medium'>Восстановление пароля</h2>
 
         <PasswordInput
-          onChange={onChangeValue}
-          value={form.password}
+          onChange={handleChange}
+          value={values.password}
           name={'password'}
           placeholder="Введите новый пароль"
-          isIcon={false}
         />
 
         <Input
-          onChange={onChangeValue}
-          value={form.token}
+          onChange={handleChange}
+          value={values.token}
           name={'token'}
           placeholder="Введите код из письма"
-          isIcon={false}
         />
 
         <Button
@@ -94,7 +86,7 @@ const ResetPassword = () => {
             type="secondary"
             size="medium"
             onClick={() => {
-              navigate('/auth/login', {replace: true})
+              navigate('/login', {replace: true})
             }}
             extraClass={styles['link-button']}
           >Войти</Button>
