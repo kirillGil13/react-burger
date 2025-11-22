@@ -22,4 +22,31 @@ export interface IUser {
   name: string
 }
 
+export interface IAuthData {
+  accessToken: string
+  refreshToken: string
+}
+
+export interface IRegisterForm {
+  email: string;
+  password: string;
+  name: string;
+}
+
+export interface IChangeUserForm {
+  email: string;
+  name: string;
+}
+
+export interface IResetPasswordForm {
+  password: string;
+  token: string;
+}
+
+export interface ISignInForm {
+  email: string;
+  password: string;
+}
+
 export interface IApiError extends Error {}
+

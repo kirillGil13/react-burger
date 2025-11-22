@@ -1,14 +1,14 @@
-import { ThunkAction } from 'redux-thunk';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { setAccessToken, setInitialUser, setUser, setUserError, setUserLoading } from '../services/user';
-import { get, patch, post } from './request';
-import { IUser } from './types';
+import { IAuthData, IChangeUserForm, IRegisterForm, IResetPasswordForm, ISignInForm } from '../types';
 import { handleError } from './handleError';
+import { authApi } from '../api';
 
 export const hasAuth = () => {
   return !!localStorage.getItem('refreshToken')
 }
 
-const updateToken = (dispatch, authData) => {
+const updateToken = (dispatch: ThunkDispatch<unknown, unknown, any>, authData: IAuthData) => {
   const accessToken = authData.accessToken.split('Bearer ')[1];
 
   dispatch(setAccessToken(accessToken));
@@ -17,7 +17,7 @@ const updateToken = (dispatch, authData) => {
   return accessToken
 }
 
-export const fetchUser = (init: RequestInit): ThunkAction<Promise<IUser>, any, unknown, any> => {
+export const fetchUser = (init: RequestInit): ThunkAction<Promise<boolean | undefined>, any, unknown, any> => {
   return async (dispatch, getState) => {
     dispatch(setUserLoading(true))
     dispatch(setUserError(null));
@@ -25,7 +25,7 @@ export const fetchUser = (init: RequestInit): ThunkAction<Promise<IUser>, any, u
 
     if (!refreshToken) {
       dispatch(setUserLoading(false))
-      return null
+      return false
     }
 
     const accessToken = getState().user.accessToken;
@@ -34,15 +34,15 @@ export const fetchUser = (init: RequestInit): ThunkAction<Promise<IUser>, any, u
       let token = accessToken;
 
       if (!accessToken) {
-        const authData = await post('/auth/token', { token: refreshToken }, init)
+        const authData = await authApi.getAuthData(refreshToken, init)
         
         token = updateToken(dispatch, authData)
       }
 
-      const userData = await get('/auth/user', { headers: { Authorization: `Bearer ${token}` }, ...init });
+      const userData = await authApi.getUser(token, init)
 
       if (userData.status === 401) {
-        const authData = await post('/auth/token', { token: refreshToken }, init)
+        const authData = await authApi.getAuthData(refreshToken, init)
         updateToken(dispatch, authData)
 
         // TODO
@@ -53,7 +53,7 @@ export const fetchUser = (init: RequestInit): ThunkAction<Promise<IUser>, any, u
       dispatch(setUser(userData.user));
       dispatch(setInitialUser(userData.user));
 
-      return userData
+      return userData.success
     } catch (err) {
       const error = handleError(err);
       dispatch(setUserError(error));
@@ -63,7 +63,7 @@ export const fetchUser = (init: RequestInit): ThunkAction<Promise<IUser>, any, u
   }
 };
 
-export const editUser = (form: IUser): ThunkAction<Promise<void>, any, unknown, any> => {
+export const editUser = (form: IChangeUserForm): ThunkAction<Promise<void>, any, unknown, any> => {
   return async (dispatch, getState) => {
     dispatch(setUserLoading(true))
     dispatch(setUserError(null));
@@ -73,65 +73,80 @@ export const editUser = (form: IUser): ThunkAction<Promise<void>, any, unknown, 
     if (!accessToken) return
     
     try {
-      const result = await patch('/auth/user', form, {headers: { Authorization: `Bearer ${accessToken}` }})
+      const result = await authApi.changeUser(form, accessToken)
 
       dispatch(setUser(result.user));
     } catch (err) {
-      dispatch(setUserError(err.message));
+      const error = handleError(err);
+      dispatch(setUserError(error));
     } finally {
       dispatch(setUserLoading(false))
     }
   }
 }
 
-export const sendPasswordReset = async (email) => {
-  return post('/password-reset', { email })
+export const sendPasswordReset = async (email: string): Promise<boolean> => {
+  try {
+    const result = await authApi.sendResetPassword(email)
+
+    return result.success
+  } catch (err) {
+    throw err
+  }
 }
 
-export const resetPassword = async (password, token) => {
-  return post(`/password-reset/reset`, { password, token })
+export const resetPassword = async (form: IResetPasswordForm): Promise<boolean> => {
+  try {
+    const result = await authApi.resetPassword(form)
+
+    return result.success
+  } catch (err) {
+    throw err
+  }
 }
 
-export const signIn = (form) => {
+export const signIn = (form: ISignInForm): ThunkAction<Promise<boolean>, any, unknown, any> => {
   return async dispatch => {
     try {
-      const result = await post('/auth/login', form)
+      const result = await authApi.signIn(form)
 
       dispatch(setUser(result.user));
       updateToken(dispatch, result)
 
-      return result
+      return result.success
     } catch (err) {
       throw err
     }
   }
 }
 
-export const signOut = () => {
+export const signOut = (): ThunkAction<Promise<boolean>, any, unknown, any> => {
   return async dispatch => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return false
+
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      const result = await post('/auth/logout', {token: refreshToken})
+      const result = await authApi.logOut(refreshToken)
 
       dispatch(setAccessToken(null));
       localStorage.removeItem('refreshToken');
 
-      return result
+      return result.success
     } catch (err) {
       throw err
     }
   }
 }
 
-export const registerUser = (form) => {
+export const registerUser = (form: IRegisterForm): ThunkAction<Promise<boolean>, any, unknown, any> => {
   return async dispatch => {
     try {
-      const result = await post('/auth/register', form)
+      const result = await authApi.registerUser(form)
 
       dispatch(setUser(result.user));
       updateToken(dispatch, result)
 
-      return result
+      return result.success
     } catch (err) {
       throw err
     } 

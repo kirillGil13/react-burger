@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk';
 import { setIngredientsLoading, setIngredientsError, setIngredientList } from '../services/ingredientList';
-import { request } from './request';
 import { handleError } from './handleError';
+import { fetchIngredients } from '../api/ingredientsListApi';
 
 export const loadIngredientsList = (init: RequestInit): ThunkAction<Promise<void>, unknown, unknown, any> => {
   return async (dispatch) => {  
@@ -9,7 +9,7 @@ export const loadIngredientsList = (init: RequestInit): ThunkAction<Promise<void
     dispatch(setIngredientsError(null));
   
     try {
-      const result = await request('/ingredients', init)
+      const result = await fetchIngredients(init)
   
       dispatch(setIngredientList(result.data));
     } catch (err) {

@@ -1,6 +1,6 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients-tabs.module.css';
-import { TIngredientType } from '../../../utils/types';
+import { TIngredientType } from '../../../types';
 import { FC } from 'react';
 
 interface ITab {

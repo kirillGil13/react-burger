@@ -2,36 +2,27 @@ import { ThunkAction } from 'redux-thunk';
 import { deleteAllConstructorIngredients } from '../services/constructorIngredients';
 import { setCreatedOrder, setCreatedOrderError, setCreatedOrderLoading } from '../services/createdOrder';
 import { handleError } from './handleError';
-import { request } from './request';
-import { IConstructorIngredient } from './types';
+import { IConstructorIngredient } from '../types';
+import { orderApi } from '../api';
 
-interface IOrder {
-  number: number
-}
-
-export const createOrder = (ingredients: IConstructorIngredient[]): ThunkAction<Promise<IOrder>, unknown, unknown, any> => {
+export const createOrder = (ingredients: IConstructorIngredient['_id'][]): ThunkAction<Promise<boolean>, unknown, unknown, any> => {
   return async (dispatch) => {
     dispatch(setCreatedOrderLoading(true))
     dispatch(setCreatedOrderError(null));
 
     try {
-      const result = await request('/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ingredients})
-      });
+      const result = await orderApi.createOrder(ingredients)
 
       dispatch(setCreatedOrder(result.order));
       // TODO
       // @ts-ignore
       dispatch(deleteAllConstructorIngredients())
 
-      return result
+      return result.success
     } catch (err) {
       const error = handleError(err);
       dispatch(setCreatedOrderError(error));
+      return false
     } finally {
       dispatch(setCreatedOrderLoading(false))
     }

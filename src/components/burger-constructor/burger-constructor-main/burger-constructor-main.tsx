@@ -1,5 +1,5 @@
 import styles from './burger-constructor-main.module.css';
-import { IConstructorIngredient } from '../../../utils/types';
+import { IConstructorIngredient } from '../../../types';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import { FC } from 'react';
 

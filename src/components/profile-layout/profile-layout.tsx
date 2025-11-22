@@ -22,7 +22,7 @@ const ProfileLayout: FC = () => {
       <div className={styles.content}>
         <nav className={styles.navigation}>
           <ul className={styles.menu}>
-            <ProfileLayoutMenuItem active={route.pathname === '/profile/info'} text="Профиль" onClick={() => navigate('/profile/info')} />
+            <ProfileLayoutMenuItem active={route.pathname === '/profile'} text="Профиль" onClick={() => navigate('/profile')} />
             <ProfileLayoutMenuItem active={route.pathname === '/profile/orders'} text="История заказов" onClick={() => navigate('/profile/orders')} />
             <ProfileLayoutMenuItem text="Выход" onClick={signOut} />
           </ul>

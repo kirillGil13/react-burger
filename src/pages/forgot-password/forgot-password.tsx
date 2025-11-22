@@ -26,7 +26,7 @@ const ForgotPassword: FC = () => {
     try {
       const result = await sendPasswordReset(values.email);
 
-      if (result.success) {
+      if (result) {
         navigate('/reset-password', { state: { from: location } })
       }
     } catch (err) {

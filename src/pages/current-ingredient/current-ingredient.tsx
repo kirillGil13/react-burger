@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 import styles from './current-ingredient.module.css';
-import { IIngredient } from '../../utils/types';
+import { IIngredient } from '../../types';
 
 const CurrentIngredient: FC = () => {
   const { id } = useParams();

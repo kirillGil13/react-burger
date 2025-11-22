@@ -12,7 +12,7 @@ import { createOrder } from '../../utils/createOrder';
 import Loader from '../loader/loader';
 import { hasAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import { IConstructorIngredient, IIngredient } from '../../utils/types';
+import { IConstructorIngredient, IIngredient } from '../../types';
 
 const createEmptyItem = (): IConstructorIngredient => {
   return {

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { deleteCurrentIngredient } from '../../services/currentIngredient';
-import { IIngredient } from '../../utils/types';
+import { IIngredient } from '../../types';
 
 const ModalLayout = () => {
   const {id} = useParams();

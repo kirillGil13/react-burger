@@ -33,9 +33,9 @@ const ResetPassword: FC = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await resetPassword(values.password, values.token);
+      const result = await resetPassword(values);
 
-      if (result.success) {
+      if (result) {
         navigate('/login')
       }
     } catch (err) {

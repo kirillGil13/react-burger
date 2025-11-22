@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IIngredient } from '../../utils/types';
+import { IIngredient } from '../../types';
 import styles from './ingredient-details.module.css'
 
 interface IProps {

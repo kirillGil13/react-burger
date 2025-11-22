@@ -1,6 +1,11 @@
-import { API_URL } from './constants';
+import { API_URL } from '../utils/constants';
 
-type RequestPayload = Record<string, any> | FormData
+type TRequestPayload = Record<string, any> | FormData
+
+type TRequestResponse<T extends Record<string, any>> = {
+  success: boolean
+  status?: number
+} & T
 
 const checkResponse = (res: Response) => {
   if (res.ok) {
@@ -20,7 +25,7 @@ export const request = async (url: string, options: RequestInit) => {
   return fetch(API_URL + url, options).then(checkResponse).catch(handleError);
 }
 
-export const post = async (url: string, data: RequestPayload = {}, options: RequestInit = {}) => {
+export const post = async <T extends Record<string, any>>(url: string, data: TRequestPayload = {}, options: RequestInit = {}): Promise<TRequestResponse<T>> => {
   return request(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -32,7 +37,7 @@ export const post = async (url: string, data: RequestPayload = {}, options: Requ
   })
 }
 
-export const patch = async (url: string, data: RequestPayload = {}, options: RequestInit = {}) => {
+export const patch = async <T extends Record<string, any>>(url: string, data: TRequestPayload = {}, options: RequestInit = {}): Promise<TRequestResponse<T>> => {
   return request(url, {
     method: 'PATCH',
     body: JSON.stringify(data),
@@ -44,14 +49,14 @@ export const patch = async (url: string, data: RequestPayload = {}, options: Req
   })
 }
 
-export const get = async (url: string, options: RequestInit = {}) => {
+export const get = async <T extends Record<string, any>>(url: string, options: RequestInit = {}): Promise<TRequestResponse<T>> => {
   return request(url, {
     method: 'GET',
     ...options
   })
 }
 
-export const del = async (url: string, options: RequestInit = {}) => {
+export const del = async <T extends Record<string, any>>(url: string, options: RequestInit = {}): Promise<TRequestResponse<T>> => {
   return request(url, {
     method: 'DELETE',
     ...options

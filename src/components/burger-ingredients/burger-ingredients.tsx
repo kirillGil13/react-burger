@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentIngredient } from '../../services/currentIngredient';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
-import { IIngredient, TIngredientType } from '../../utils/types';
+import { IIngredient, TIngredientType } from '../../types';
 
 const BurgerIngredients: FC = () => {
   // TODO

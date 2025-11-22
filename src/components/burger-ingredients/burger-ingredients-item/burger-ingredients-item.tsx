@@ -1,7 +1,7 @@
 import { FC, memo, MouseEvent } from 'react'
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients-item.module.css';
-import { IIngredient } from '../../../utils/types';
+import { IIngredient } from '../../../types';
 import { useDrag } from 'react-dnd';
 import { EDragTypes } from '../../../utils/dragTypes';
 

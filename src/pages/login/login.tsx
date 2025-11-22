@@ -38,7 +38,7 @@ const Login: FC = () => {
     try {
       const result = await dispatch(signIn(values));
 
-      if (result.success) {
+      if (result) {
         navigate(from, {replace: true})
       }
     } catch (err) {
