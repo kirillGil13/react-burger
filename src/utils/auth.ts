@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { setAccessToken, setInitialUser, setUser, setUserError, setUserLoading } from '../services/user';
+import { setAccessToken, setUser, setUserError, setUserLoading } from '../services/user';
 import { IAuthData, IChangeUserForm, IRegisterForm, IResetPasswordForm, ISignInForm } from '../types';
 import { handleError } from './handleError';
 import { authApi } from '../api';
@@ -51,7 +51,6 @@ export const fetchUser = (init: RequestInit): ThunkAction<Promise<boolean | unde
       }
 
       dispatch(setUser(userData.user));
-      dispatch(setInitialUser(userData.user));
 
       return userData.success
     } catch (err) {

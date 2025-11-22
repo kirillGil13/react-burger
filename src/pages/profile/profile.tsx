@@ -1,17 +1,22 @@
-import { ChangeEvent, FC, FormEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, FormEvent, useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import styles from './profile.module.css'
-import { Button, EmailInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../../services/user';
 import { editUser } from '../../utils/auth';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 import { handleError } from '../../utils/handleError';
 
 const Profile: FC = () => {
-  const [isNameDisabled, setIsNameDisabled] = useState<boolean>(true);
-  // TODO
+  const [isNameDisabled, setIsNameDisabled] = useState(true);
   const user = useSelector<any, any>(store => store.user.user);
-  const initialUser = useSelector<any, any>(store => store.user.initialUser);
+
+  const {values, handleChange, setValues} = useForm({
+    name: '',
+    email: '',
+    password: '',
+  })
+  const [initialValues, setInitialValues] = useState(values);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -21,23 +26,27 @@ const Profile: FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const onChangeFormValue = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setUser({
-      ...user,
-      [e.target.name]: e.target.value
-    }))
-  }
+  useEffect(() => {
+    if (user) {
+      setValues({...user, password: ''});
+      setInitialValues({...user, password: ''})
+    }
+  }, [user, setValues, setInitialValues])
 
   const onNameEditClick = useCallback(() => {
     setIsNameDisabled(false);
     inputRef.current?.focus();
   }, [inputRef])
 
-  const isSubmitButtonDisabled = useMemo<boolean>(() => {    
-    return JSON.stringify(user) === JSON.stringify(initialUser) || isSubmitting;
+  const isSubmitButtonDisabled = useMemo(() => {      
+    return JSON.stringify(initialValues) === JSON.stringify(values) || isSubmitting;
     },
-    [user, isSubmitting, initialUser]
+    [values, isSubmitting, initialValues]
   );
+
+  const resetData = () => {
+    setValues(initialValues);
+  }
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,7 +55,7 @@ const Profile: FC = () => {
 
     setIsSubmitting(true);
     try {
-      await dispatch(editUser(user))
+      await dispatch(editUser(values))
     } catch (err) {
       setError(handleError(err));
     } finally {
@@ -54,13 +63,13 @@ const Profile: FC = () => {
     }
   }
   
-  return user && (
+  return (
     <form className={styles.container} onSubmit={onSubmit}>
       <Input
         ref={inputRef}
         placeholder={'Имя'}
-        onChange={onChangeFormValue}
-        value={user.name}
+        onChange={handleChange}
+        value={values.name}
         name={'name'}
         icon='EditIcon'
         disabled={isNameDisabled}
@@ -71,11 +80,18 @@ const Profile: FC = () => {
       />
 
       <EmailInput
-        onChange={onChangeFormValue}
-        value={user.email}
+        onChange={handleChange}
+        value={values.email}
         name={'email'}
         placeholder="Логин"
         isIcon={true}
+      />
+
+      <PasswordInput
+        onChange={handleChange}
+        value={values.password}
+        name={'password'}
+        icon="EditIcon"
       />
 
       <div className={styles.actions}>
@@ -83,7 +99,7 @@ const Profile: FC = () => {
           htmlType="button"
           type="secondary"
           size="medium"
-          onClick={() => dispatch(setUser(initialUser))}
+          onClick={resetData}
         >Отмена</Button>
 
         <Button

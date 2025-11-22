@@ -5,7 +5,6 @@ const initialState = {
   isLoading: false,
   error: null,
   accessToken: null,
-  initialUser: null
 }
 
 const userSlice = createSlice({
@@ -14,9 +13,6 @@ const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload
-    },
-    setInitialUser: (state, action) => {
-      state.initialUser = action.payload
     },
     setUserLoading: (state, action) => {
       state.isLoading = action.payload
@@ -29,11 +25,10 @@ const userSlice = createSlice({
     },
     deleteUser: (state) => {
       state.user = null
-      state.initialUser = null
       state.accessToken = null
     }
   }
 })
 
-export const { setUser, setUserLoading, setUserError, setAccessToken, setInitialUser, deleteUser } = userSlice.actions
+export const { setUser, setUserLoading, setUserError, setAccessToken, deleteUser } = userSlice.actions
 export default userSlice.reducer
