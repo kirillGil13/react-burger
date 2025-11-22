@@ -1,15 +1,21 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './profile.module.css'
-import { Button, EmailInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../../services/user';
 import { editUser } from '../../utils/auth';
 import ErrorItem from '../../components/common/error-item/error-item';
+import { useForm } from '../../hooks/useForm';
 
 const Profile = () => {
   const [isNameDisabled, setIsNameDisabled] = useState(true);
   const user = useSelector(store => store.user.user);
-  const initialUser = useSelector(store => store.user.initialUser);
+
+  const {values, handleChange, setValues} = useForm({
+    name: '',
+    email: '',
+    password: '',
+  })
+  const [initialValues, setInitialValues] = useState(values);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -18,23 +24,29 @@ const Profile = () => {
 
   const inputRef = useRef(null)
 
-  const onChangeFormValue = e => {
-    dispatch(setUser({
-      ...user,
-      [e.target.name]: e.target.value
-    }))
-  }
+  useEffect(() => {
+    if (user) {
+      setValues({...user, password: ''});
+      setInitialValues({...user, password: ''})
+    }
+  }, [user, setValues, setInitialValues])
 
   const onNameEditClick = useCallback(() => {
     setIsNameDisabled(false);
     inputRef.current.focus();
   }, [inputRef])
 
-  const isSubmitButtonDisabled = useMemo(() => {    
-    return JSON.stringify(user) === JSON.stringify(initialUser) || isSubmitting;
+  const isSubmitButtonDisabled = useMemo(() => {  
+    console.log(JSON.stringify(initialValues), JSON.stringify(values));
+      
+    return JSON.stringify(initialValues) === JSON.stringify(values) || isSubmitting;
     },
-    [user, isSubmitting, initialUser]
+    [values, isSubmitting, initialValues]
   );
+
+  const resetData = () => {
+    setValues(initialValues);
+  }
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -43,7 +55,7 @@ const Profile = () => {
 
     setIsSubmitting(true);
     try {
-      await dispatch(editUser(user))
+      await dispatch(editUser(values))
     } catch (err) {
       setError(err.message);
     } finally {
@@ -51,13 +63,13 @@ const Profile = () => {
     }
   }
   
-  return user && (
+  return (
     <form className={styles.container} onSubmit={onSubmit}>
       <Input
         ref={inputRef}
         placeholder={'Имя'}
-        onChange={onChangeFormValue}
-        value={user.name}
+        onChange={handleChange}
+        value={values.name}
         name={'name'}
         icon='EditIcon'
         disabled={isNameDisabled}
@@ -66,11 +78,18 @@ const Profile = () => {
       />
 
       <EmailInput
-        onChange={onChangeFormValue}
-        value={user.email}
+        onChange={handleChange}
+        value={values.email}
         name={'email'}
         placeholder="Логин"
         isIcon={true}
+      />
+
+      <PasswordInput
+        onChange={handleChange}
+        value={values.password}
+        name={'password'}
+        icon="EditIcon"
       />
 
       <div className={styles.actions}>
@@ -78,7 +97,7 @@ const Profile = () => {
           htmlType="button"
           type="secondary"
           size="medium"
-          onClick={() => dispatch(setUser(initialUser))}
+          onClick={resetData}
         >Отмена</Button>
 
         <Button

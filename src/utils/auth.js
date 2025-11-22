@@ -1,4 +1,4 @@
-import { setAccessToken, setInitialUser, setUser, setUserError, setUserLoading } from '../services/user';
+import { setAccessToken, setUser, setUserError, setUserLoading } from '../services/user';
 import { get, patch, post } from './request';
 
 export const hasAuth = () => {
@@ -46,7 +46,6 @@ export const fetchUser = (init) => {
       }
 
       dispatch(setUser(userData.user));
-      dispatch(setInitialUser(userData.user));
 
       return userData
     } catch (err) {
