@@ -28,7 +28,7 @@ const constructorIngredientsSlice = createSlice({
     deleteConstructorIngredient: (state, action) => {
       state.list = state.list.filter((item) => item.uuid !== action.payload)
     },
-    deleteAllConstructorIngredients: (state) => {
+    deleteAllConstructorIngredients: (state, action) => {
       state.list = []
     },
     replaceConstructorIngredient: (state, action) => {
