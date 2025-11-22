@@ -3,7 +3,6 @@ import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-de
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useCallback, useState, useMemo, FC } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import { EDragTypes } from '../../utils/dragTypes'
 import { addConstructorIngredient, deleteConstructorIngredient, moveConstructorIngredient, replaceConstructorIngredient } from '../../services/constructorIngredients';
@@ -13,6 +12,7 @@ import Loader from '../loader/loader';
 import { hasAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { IConstructorIngredient, IIngredient } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 const createEmptyItem = (): IConstructorIngredient => {
   return {
@@ -34,11 +34,10 @@ const BurgerConstructor: FC = () => {
   const [opened, setOpened] = useState<boolean>(false)
 
   // TODO
-  const constructorIngredients = useSelector<any, any[]>((store) => store.constructorIngredients.list);
-  const isCreatingOrder = useSelector<any, boolean>((store) => store.createdOrder.isLoading);
+  const constructorIngredients = useAppSelector<any, any[]>((store) => store.constructorIngredients.list);
+  const isCreatingOrder = useAppSelector((store) => store.createdOrder.isLoading);
 
-  // TODO
-  const dispatch = useDispatch<any>()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   
   const [, dropTarget] = useDrop<IIngredient>({

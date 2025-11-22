@@ -3,10 +3,10 @@ import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-de
 import { FC, FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../utils/auth';
-import { useDispatch } from 'react-redux';
 import ErrorItem from '../../components/common/error-item/error-item';
 import { useForm } from '../../hooks/useForm';
 import { handleError } from '../../utils/handleError';
+import { useAppDispatch } from '../../hooks/hooks';
 
 const Register: FC = () => {
   const {values, handleChange} = useForm({
@@ -17,8 +17,7 @@ const Register: FC = () => {
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // TODO
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 

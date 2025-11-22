@@ -3,21 +3,20 @@ import styles from './burger-ingredients.module.css';
 import BurgerIngredientsItem from './burger-ingredients-item/burger-ingredients-item';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
 import BurgerIngredientsTabs from './burger-ingredients-tabs/burger-ingredients-tabs';
-import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentIngredient } from '../../services/currentIngredient';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 import { IIngredient, TIngredientType } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 const BurgerIngredients: FC = () => {
-  // TODO
-  const dispatch = useDispatch<any>()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState<TIngredientType>('bun')
   
   // TODO
-  const data = useSelector<any, any[]>((store) => store.ingredientList.list);
-  const constructorIngredients = useSelector<any, any[]>((store) => store.constructorIngredients.list);
+  const data = useAppSelector<any, any[]>((store) => store.ingredientList.list);
+  const constructorIngredients = useAppSelector<any, any[]>((store) => store.constructorIngredients.list);
 
   const mainData = useMemo<IIngredient[]>(() => data.filter((item) => item.type === 'main'), [data]);
   const sauceData = useMemo<IIngredient[]>(() => data.filter((item) => item.type === 'sauce'), [data]);

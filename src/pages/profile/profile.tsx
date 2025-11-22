@@ -1,15 +1,15 @@
 import { FC, FormEvent, useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import styles from './profile.module.css'
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { editUser } from '../../utils/auth';
 import ErrorItem from '../../components/common/error-item/error-item';
 import { useForm } from '../../hooks/useForm';
 import { handleError } from '../../utils/handleError';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 const Profile: FC = () => {
   const [isNameDisabled, setIsNameDisabled] = useState(true);
-  const user = useSelector<any, any>(store => store.user.user);
+  const user = useAppSelector(store => store.user.user);
 
   const {values, handleChange, setValues} = useForm({
     name: '',
@@ -21,8 +21,7 @@ const Profile: FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  // TODO
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null)
 

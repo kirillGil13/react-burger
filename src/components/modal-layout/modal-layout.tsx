@@ -1,19 +1,18 @@
 import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { deleteCurrentIngredient } from '../../services/currentIngredient';
 import { IIngredient } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 const ModalLayout = () => {
   const {id} = useParams();
   const navigate = useNavigate()
-  // TODO
-  const dispatch = useDispatch<any>()
+  const dispatch = useAppDispatch<any>()
 
   // TODO
-  const data = useSelector<any, any[]>((store) => store.ingredientList.list);
+  const data = useAppSelector<any, any[]>((store) => store.ingredientList.list);
 
   const currentIngredient = useMemo<IIngredient>(() => data.find(item => item._id === id), [data, id]);
 

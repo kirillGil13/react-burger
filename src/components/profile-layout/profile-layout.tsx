@@ -1,15 +1,14 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import ProfileLayoutMenuItem from './profile-layout-menu-item/profile-layout-menu-item';
 import styles from './profile-layout.module.css'
-import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../services/user';
 import { FC } from 'react';
+import { useAppDispatch } from '../../hooks/hooks';
 
 const ProfileLayout: FC = () => {
   const route = useLocation();
   const navigate = useNavigate()
-  // TODO
-  const dispatch = useDispatch<any>()
+  const dispatch = useAppDispatch()
 
   const signOut = () => {
     localStorage.removeItem('refreshToken');

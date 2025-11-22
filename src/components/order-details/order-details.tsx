@@ -1,13 +1,12 @@
 import styles from './order-details.module.css';
 import doneImage from '../../images/done.png';
-import { useSelector } from 'react-redux';
 import { FC } from 'react';
+import { useAppSelector } from '../../hooks/hooks';
 
 const OrderDetails: FC = () => {
   const numberClassName = [styles.number, 'text text_type_digits-large'].join(' ');
 
-  // TODO
-  const number = useSelector<any, number>((store) => store.createdOrder.number);
+  const number = useAppSelector((store) => store.createdOrder.number);
 
   return (
     <div className={styles.container}>

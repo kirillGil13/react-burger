@@ -3,10 +3,10 @@ import styles from './login.module.css';
 import { FC, FormEvent, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { signIn } from '../../utils/auth';
-import { useDispatch } from 'react-redux';
 import ErrorItem from '../../components/common/error-item/error-item';
 import { useForm } from '../../hooks/useForm';
 import { handleError } from '../../utils/handleError';
+import { useAppDispatch } from '../../hooks/hooks';
 
 const Login: FC = () => {
   const {values, handleChange} = useForm({
@@ -16,8 +16,7 @@ const Login: FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  // TODO
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 

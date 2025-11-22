@@ -5,12 +5,12 @@ import { CurrentIngredient, CurrentOrder, ForgotPassword, Home, Login, NotFound,
 import AuthLayout from '../auth-layout/auth-layout';
 import ProfileLayout from '../profile-layout/profile-layout';
 import ProtectedRouteElement from '../common/protected-route-element/protected-route-element';
-import { useDispatch } from 'react-redux';
 import { fetchUser } from '../../utils/auth';
 import { ReactElement, useEffect } from 'react';
 import ModalLayout from '../modal-layout/modal-layout';
 import HomeLayout from '../home-layout/home-layout';
 import { loadIngredientsList } from '../../utils/loadIngredientsList';
+import { useAppDispatch } from '../../hooks/hooks';
 
 function AppRoutes(): ReactElement {
   const location = useLocation();
@@ -50,8 +50,7 @@ function AppRoutes(): ReactElement {
 }
 
 function App(): ReactElement {
-  // TODO
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const controller = new AbortController();
