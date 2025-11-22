@@ -10,6 +10,8 @@ import { addConstructorIngredient, deleteConstructorIngredient, moveConstructorI
 import BurgerConstructorMain from './burger-constructor-main/burger-constructor-main';
 import { createOrder } from '../../utils/createOrder';
 import Loader from '../loader/loader';
+import { hasAuth } from '../../utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 const createEmptyItem = () => {
   return {
@@ -33,6 +35,7 @@ const BurgerConstructor = () => {
   const isCreatingOrder = useSelector((store) => store.createdOrder.isLoading);
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   
   const [, dropTarget] = useDrop({
     accept: DragTypes.INGREDIENT,
@@ -82,10 +85,14 @@ const BurgerConstructor = () => {
   }, [])
 
   const onCreateOrder = useCallback(async () => {
+    if (!hasAuth()) {
+      navigate('/login')
+      return
+    }
     await dispatch(createOrder(constructorIngredients.map((item) => item._id)))
 
     setOpened(true)
-  }, [constructorIngredients, dispatch])
+  }, [constructorIngredients, dispatch, navigate])
 
   const modal = (
     <Modal opened={opened} onClose={closeModal}>

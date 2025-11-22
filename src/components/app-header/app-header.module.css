@@ -20,3 +20,8 @@
 .logo {
   justify-self: center;
 }
+
+.navigation {
+  display: flex;
+  align-items: center;
+}

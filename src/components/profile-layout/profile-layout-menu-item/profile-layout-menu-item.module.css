@@ -1,8 +1,7 @@
-.element {
+.content {
+  height: 64px;
   display: flex;
   align-items: center;
   cursor: pointer;
   user-select: none;
-  width: max-content;
-  text-decoration: none !important;
 }

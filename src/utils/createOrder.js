@@ -1,6 +1,5 @@
 import { deleteAllConstructorIngredients } from '../services/constructorIngredients';
 import { setCreatedOrder, setCreatedOrderError, setCreatedOrderLoading } from '../services/createdOrder';
-import { API_URL } from './constants';
 import { request } from './request';
 
 export const createOrder = (ingredients) => {
